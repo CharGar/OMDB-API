@@ -1,50 +1,48 @@
 var myApp = angular.module( 'myApp', [] );
 
 myApp.controller( 'cr', function( $http ){
-
+console.log('cr controller functional...');
   var vm = this;
+  vm.flics = [];
 
-  vm.getAssign = function (id) {
-    console.log( 'in getAssign:', id );
+
+  vm.getMovie = function () {
     $http({
       method: 'GET',
-      url: '/assignments/'+ id
-    }).then( function success ( response ){
-      console.log(response);
-      vm.assignOutput = response.data;
-      vm.errorOutput = '';
-      vm.id='';
-    }, function (err){
-      vm.errorOutput = "ASSIGNMENT DOES NOT EXIST ";
-      vm.id='';
-    }); // end http GET
-  } // end getAssign
+      url: 'http://www.omdbapi.com/?s='+vm.mov
+    }).then( function success( response ){
+      console.log('response.data.Search-->', response.data.Search);
+      vm.flics= response.data.Search;
+      console.log('vm.flics-->', vm.flics);
 
-  vm.newAss = function () {
-    console.log( 'in newAss:' );
-    var objectToSend = {
-      assignment_name: vm.ass,
-      student_name: vm.student,
-      score: vm.score,
-      date_completed: vm.date
-    }; // end objectToSend
+});
+}
+vm.favs = function(Year, Title, Poster) {
+   console.log('in favs');
+   var objectToSend = {
+     year: Year,
+     title: Title,
+     poster: Poster,
+   };
+   console.log(objectToSend);
+   $http({
+     method: 'POST',
+     url: '/favs',
+     data: objectToSend
+   }).then( function success(response){
+     vm.getFavs();
+ });
+ }
+   vm.fav = [];
 
-    console.log(objectToSend);
+  vm.getFavs = function(){
+    console.log('in favs controller');
     $http({
-      method: 'POST',
-      url: '/assignments',
-      data: objectToSend
-    }).then( function success ( response ){
-      console.log(response);
-      vm.getAssign('');
-    }, function (err){
-      console.log('error in POST route');
-    }); // end http POST
-
-    vm.student='';
-    vm.score='';
-    vm.ass='';
-    vm.date='';
-
-  } // end newAss
-}); // end cr controller
+      method: 'GET',
+      url: '/getfavs'
+    }).then( function success(response){
+      vm.fav = response.data;
+      console.log(vm.fav);
+    });//end GET
+  };
+});

@@ -3,45 +3,55 @@ var app = express();
 var path = require('path');
 var bodyParser = require ('body-parser');
 var mongoose = require('mongoose');
-var assignments = require( './models/assSchema.js' );
+var movies = require( './models/movSchema.js' );
+var port = process.env.PORT || 5000;
 
-var port = process.env.PORT || 3000;
-
-// serve static files
+//  static files
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded( {extended:true}));
 app.use(bodyParser.json());
 
-// server index file
+//  index file
 app.get('/', function( req, res ) {
   res.sendFile(path.join(__dirname, './public/views/index.html'));
-}); // end base GET
+}); // end GET
 
-app.get('/assignments/:id?', function ( req, res ){
+//GET start
+app.get('/', function ( req, res ){
   console.log(req.params.id);
-  if (req.params.id == undefined){
-    console.log('id is--> undefined');
-    assignments.find().then(function( data ) {
+  if (req.params.id){
+    movies.find().then(function( data ) {
       res.send( data );
-    }); // end find all
+    }); // end
   } else {
     console.log( req.params.id );
-    assignments.find({ _id:req.params.id }).then(function( data ) {
-      res.send( data );
-    }, function( err ) {
-      res.sendStatus( 500 );
-    }); // end find by id
-  } // end if else
-}); // assignments GET
-
-app.post( '/assignments', function ( req, res ) {
-  console.log( 'in assignments POST route:', req.body );
-  var newAssIn = assignments(req.body);
-  newAssIn.save().then(function(){
+  }
+});//GET end
+//POST start
+app.post( '/favs', function ( req, res ) {
+  console.log( 'ServerSide POST says:', req.body );
+  var newMov = movies(req.body);
+  newMov.save().then(function(){
     res.sendStatus(200);
-  }); // end save
-}); // end assignments POST
+  }); // end
+}); // POST end
 
+//GET start
+app.get('/getfavs',function(req,res){
+  console.log('In ServerSide GET');
+  movies.find().then(function(data){
+    console.log(data);
+  res.send(data);
+  });
+});//GET end
+
+//listen start
 app.listen(port, function() {
-  console.log("server running, check localhost:3000");
-}); // end listen
+  console.log("server running, check localhost:5000");
+});
+//listen end
+
+//notes from millie
+app.get('/*',function(req,res){
+  res.sendFile(path.resolve('public/views/index.html'));
+});

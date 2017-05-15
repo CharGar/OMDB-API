@@ -1,0 +1,10 @@
+<div ng-controller="cr as fv" ng-init="fv.getFavs()">
+    <div class="containerTwo row">
+     <div ng-repeat="paste in fv.fav" class="col-md-4">
+        {{ paste.Title}}<br>
+        {{ paste.Poster}}<br>
+        <img ng-src="{{paste.Poster}}">
+        <button ng-click="fv.deleteFav(paste._id)">Delete</button>
+     </div>
+  </div>
+</div>

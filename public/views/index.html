@@ -3,36 +3,42 @@
 <head>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="styles/style.css">
+  <link href="https://fonts.googleapis.com/css?family=Exo" rel="stylesheet">
   <script src="vendors/angular.min.js" charset="utf-8"></script>
   <script src="client.js" charset="utf-8"></script>
-
-
+  <base href="/">
   <title>Week 5 Friday Project</title>
 </head>
-
+<!-- start controller -->
 <body ng-app="myApp">
-  <!-- start controller -->
-  <!-- ng-init getAssign() to fire on pageload -->
-  <div ng-controller='cr as x' ng-init="x.getAssign('')">
-    <h1 class="jumbotron">Assignment Tracker</h1><br>
-    <input ng-model= 'x.ass' type="text" placeholder="assignment...">
-    <input ng-model= 'x.student' type="text" placeholder="student name...">
-    <input ng-model= 'x.score' type="number" placeholder="score...">
-    <input ng-model= 'x.date' type="date" placeholder="date">
-    <button ng-click= 'x.newAss()'type="button" name="button">Click to Submit</button>
-    <input ng-model= 'x.id' type="text" placeholder="assignment ID">
-    <button ng-click= 'x.getAssign(x.id)'type="button" name="button">Click To Search</button>
-
-    <div ng-repeat="ass in x.assignOutput">
-      <div class="outPut"><p> {{ass.assignment_name}} {{ass.student_name}} {{ass.score}} {{ass.score}} {{ass.date_completed}}</p>
-
-      </div>
+  <div ng-controller='cr as x'>
+    <h1 class="jumbotron">Movie Finder</h1><br>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <h6><a class='navbar-header' href='/favs'> My Favs </a></h6>
+      <h6><a href="/"> Main </a></h6>
+    </nav>
+    <input ng-model= 'x.mov' type="text" placeholder="enter movie here..."/>
+    <button id="findButton" ng-click= 'x.getMovie()' type="button" name="button">Find My Movie</button>
+    <div class = 'container row'>
+      <div ng-repeat="paste in x.flics" class="col-sm-3">
+        {{ paste.Title }} <br>
+        {{ paste.Year }}  <br>
+        <img ng-src="{{paste.Poster}}"> <br>
+        <button class="makeFavButton" ng-click="x.favs(paste.Year,paste.Title,paste.Poster)">Favorite</button>
+      </p>
     </div>
-    <br>
-    <br>
-    <p>{{x.errorOutput}}</p>
   </div>
-  <!-- end controller -->
+</div>
+<div ng-controller="cr as fv" ng-init="fv.getFavs()">
+    <div class="containerTwo row">
+     <div ng-repeat="paste in fv.fav" class="col-md-4">
+        {{ paste.title}}<br>
+        <img ng-src="{{paste.poster}}">
+        <button ng-click="fv.deleteFav(paste._id)">Delete</button>
+     </div>
+  </div>
+</div>
+<!-- end controller -->
 
 </body>
 
